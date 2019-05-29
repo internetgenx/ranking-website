@@ -20,7 +20,7 @@
 }
 .heading1{
 text-align:center;  
-padding-bottom:30px;
+padding-bottom:5px;
 }
 .heading2{
 text-align:center;
@@ -32,6 +32,7 @@ label{
  font-weight:bold;
 }
 
+
 .btn{
     padding:10px 30px;
     color:white;
@@ -39,7 +40,83 @@ label{
     background:purple;
     border-radius:none;
 }
+.btns{
+    padding:10px 30px;
+    margin: 2px 50px;
+    width:10%;
+    color:white;
+    font-weight:bold;
+    background:purple;
+    border-radius:4px;
+    border:none;
+}
 
 .btn:hover{
     background:darkviolet;
+}
+
+.btns:hover{
+    background:darkviolet;
+}
+
+
+.container{
+    width:800px;
+}
+/* Center the image and position the close button */
+.imgcontainer {
+    text-align: center;
+    position: relative;
+}
+.avatar{
+    width: 200px;
+	height:200px;
+    border-radius:50%;
+}
+
+/* The Modal (background) */
+
+.modal {
+    background-color: rgba(0,0,0,0.4);
+	display:none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+}
+
+/* Modal Content Box */
+.modal-content {
+    background-color:white;
+    margin: 8% auto 15% auto;
+    border: 1px solid #888;
+    width:40%; 
+	padding:10px 20px;
+}
+
+
+/* The Close Button (x) */
+.close {
+    position: absolute;
+    right: 5px;
+    top: 0;
+    color: #000;
+    font-size: 35px;
+    font-weight: bold;
+}
+.close:hover,.close:focus {
+    color: red;
+    cursor: pointer;
+}
+
+/* Add Zoom Animation */
+.animate {
+    animation: zoom 0.6s
+}
+@keyframes zoom {
+    from {transform: scale(0)} 
+    to {transform: scale(1)}
 }

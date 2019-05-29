@@ -55,6 +55,40 @@ include("connection.php");
     <br />
     <br />
     <h1 class="heading1">Are You a School?</h1>
+    <div class="text-right">
+    <button type="submit" class="btns btn btn-default" name='submit' onclick="document.getElementById('modal-wrapper').style.display='block'">Sign in</button>
+    </div>
+    <div id="modal-wrapper" class="modal">
+
+        <form class="modal-content animate" action="form.php">
+
+            <div class="imgcontainer" style="padding:10px;">
+                <span onclick="document.getElementById('modal-wrapper').style.display='none'" class="close" title="Close PopUp">&times;</span>
+                <img src="1.png" alt="Avatar" class="avatar">
+            </div>
+
+            <div class="form-group">
+                <input type="text" class="form-control" placeholder="Enter Username" name="uname">
+            </div>
+            <div class="form-group">
+                <input type="password" class="form-control" placeholder="Enter Password" name="psw">
+            </div>
+            <div class="form-group">
+                <button type="submit" class="btn btn-default" style="width:100%">Login</button>
+            </div>
+            <div class="form-row">
+                <div class="form-group col-md-6">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input"> Remember me
+                    </div>
+                </div>
+                <div class="form-group col-md-6">
+                    <a href="#" style="text-decoration:none; float:right;">Forgot Password ?</a>
+                </div>
+            </div>
+        </form>
+
+    </div>
     <div class="row">
         <div class="col-md-4">
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Sed id semper risus in hendrerit gravida rutrum quisque non. Consectetur adipiscing elit ut aliquam purus sit amet luctus. Augue eget arcu dictum varius duis at consectetur lorem. Tellus elementum sagittis vitae et leo. Sit amet commodo nulla facilisi nullam vehicula ipsum a. Nullam vehicula ipsum a arcu cursus. Nisl tincidunt eget nullam non nisi est. Sit amet volutpat consequat mauris nunc congue nisi. Diam vulputate ut pharetra sit amet aliquam. Massa eget egestas purus viverra accumsan in nisl nisi. Quam id leo in vitae turpis massa.</p>
@@ -153,7 +187,7 @@ include("connection.php");
                         <label for="screg">School Registration Number</label>
                         <input type="text" class="form-control" name="screg">
                     </div>
-                     <div class="form-group">
+                    <div class="form-group">
                         <label for="board">Board</label>
                         <select name="board" class="form-control" onchange="checkvalue(this.value)">
                             <option value="null">Choose...</option>
@@ -178,7 +212,7 @@ include("connection.php");
                         <label for="web"> School Website Link</label>
                         <input type="text" class="form-control" name="website">
                     </div>
-                    
+
                     <br>
                     <div class="form-check form-check-inline col-4">
                         <input class="form-check-input" type="checkbox" id="ts" value="option1">
@@ -186,7 +220,7 @@ include("connection.php");
                     </div>
                     <div class="form-check form-check-inline col-4">
                         <input class="form-check-input" type="checkbox" id="pa" value="option2">
-                        <label class="form-check-label" >Privacy Accepted</label>
+                        <label class="form-check-label">Privacy Accepted</label>
                     </div>
                     <br>
                     <br>
@@ -198,7 +232,18 @@ include("connection.php");
             </div>
         </div>
     </div>
-<?php
+    <script>
+        // If user clicks anywhere outside of the modal, Modal will close
+
+        var modal = document.getElementById('modal-wrapper');
+        window.onclick = function(event) {
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+
+    </script>
+    <?php
 
 if(isset($_POST['submit']))
 {
@@ -227,4 +272,5 @@ $data= mysqli_query($conn,$query);
 }
 ?>
 </body>
+
 </html>
