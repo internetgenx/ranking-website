@@ -1,0 +1,45 @@
+.row{
+ margin-left:25px;
+ margin-right:35px;
+}
+
+.col-md-4
+{
+  padding:20px 50px;
+ text-align: justify;
+}
+
+.col-md-8{
+ padding:30px 10px;
+}
+
+.regis{
+ border:1px solid #f2f2f2;
+ box-shadow:2px 2px grey;
+ padding:50px;
+}
+.heading1{
+text-align:center;  
+padding-bottom:30px;
+}
+.heading2{
+text-align:center;
+color:purple;
+font-weight:bold;
+}
+
+label{
+ font-weight:bold;
+}
+
+.btn{
+    padding:10px 30px;
+    color:white;
+    font-weight:bold;
+    background:purple;
+    border-radius:none;
+}
+
+.btn:hover{
+    background:darkviolet;
+}
