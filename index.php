@@ -3,7 +3,9 @@
 
 <head>
     <title>Ranking Website</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
     <?php
@@ -47,15 +49,15 @@
                 <h1 style="text-align: center">School Ranking in India</h1>
             </div>
             <?php
-   $query="SELECT rank,schoolname,cityname,statename,score FROM ranks";
+   $query="SELECT ranks.points_fk,points.rank,ranks.schoolname,ranks.cityname,ranks.statename,points.score FROM ranks,points WHERE ranks.points_fk=points.id ORDER BY points.rank";
    $data=mysqli_query($conn,$query);
    $total=mysqli_num_rows($data);
-
+   $i=0;
     if($total !=0)
   { 
 ?>
             <div class="list__body">
-                <table class="list__table">
+                <table class="list__table" id="myTable">
                     <tr class="list__head" style="border:1px solid grey;">
                         <th class="list__cell" style="border:1px solid grey;"><span class="list__value">Rank</span></th>
                         <th class="list__cell" style="border:1px solid grey;"><span class="list__value">School Name</span></th>
@@ -64,24 +66,61 @@
                         <th class="list__cell" style="border:1px solid grey;"><span class="list__value">Total Score</span></th>
                     </tr>
                     <tr class="list__head" style="border:1px solid grey;">
-                        <td class="list__cell" style="border:1px solid grey;"><span class="list__value">#</span></td>
-                        <td class="list__cell" style="border:1px solid grey;"><span class="list__value"><input class="form-control" type="text" placeholder="Search By School Name" aria-label="Search"></span></td>
-                        <td class="list__cell" style="border:1px solid grey;"><span class="list__value">
-                                <input class="form-control" type="text" placeholder="Search By City Name" aria-label="Search"></span></td>
-                        <td class="list__cell" style="border:1px solid grey;"><span class="list__value">
-                                <input class="form-control" type="text" placeholder="Search By State Name" aria-label="Search"></span></td>
-                        <td class="list__cell"><span class="list__value">#</span></td>
+                        <th class="list__cell" style="border:1px solid grey;"><span class="list__value">#</span></th>
+                        <th class="list__cell" style="border:1px solid grey;"><span class="list__value"><input class="form-control" type="text" placeholder="Search By School Name" aria-label="Search" id="myInput" onkeyup="myFunction()"></span></th>
+                        <th class="list__cell" style="border:1px solid grey;"><span class="list__value">
+                                <input class="form-control" type="text" placeholder="Search By City Name" aria-label="Search" id="myInput2" onkeyup="myFunction2()"></span></th>
+                        <th class="list__cell" style="border:1px solid grey;"><span class="list__value">
+                                <input class="form-control" type="text" placeholder="Search By State Name" aria-label="Search" id="myInput3" onkeyup="myFunction3()"></span></th>
+                        <th class="list__cell"><span class="list__value">#</span></th>
                     </tr>
-                                        <?php
+                                    <?php
     while($result =mysqli_fetch_assoc($data))
-    {
-     ?>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/lewis-hamilton/_jcr_content/image.img.1920.medium.jpg/1533294345447.jpg" data-nationality="British" data-dob="1985-01-07" data-country="gb">
-                        <td class="list__cell"><span class="list__value"><?php echo $result['rank'] ?></span></td>
+    { $i++;
+     ?>     
+                    <tr class="list__row color<?php echo $result['rank'] ?>" data-image="icon_schools.png" >
+                        <td class="list__cell cdd<?php echo $result['rank'] ?>"><span class="list__value"><?php echo $result['rank'] ?></span></td>
                         <td class="list__cell"><span class="list__value"><?php echo $result['schoolname'] ?></span></td>
-                        <td class="list__cell"><span class="list__value"><?php echo $result['cityname'] ?></span>
-                        <td class="list__cell"><span class="list__value"><?php echo $result['statename'] ?></span>
-                        <td class="list__cell"><span class="list__value"><?php echo $result['score'] ?></span><small class="list__label">Points</small></td>
+                        <td class="list__cell"><span class="list__value"><?php echo $result['cityname'] ?></span></td>
+                        <td class="list__cell"><span class="list__value"><?php echo $result['statename'] ?></span></td>
+                         <td class="list__cell"><span class="list__value"><?php echo $result['score'] ?></span><small class="list__label">Points</small></td>
+                        <td class="list__cell" style="display:none;" ><span class="list__value" ><?php echo $result['points_fk'] ?></span></td>
+                        <?php
+                        $id=$result['points_fk'];
+                        $q="SELECT * FROM points WHERE id='$id' ";
+                        $d=mysqli_query($conn,$q);
+                        $t=mysqli_num_rows($d);
+                        if($t!=0)
+                        {  
+                            while($r=mysqli_fetch_assoc($d))
+                            {  $records = array();?>
+        
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['teacher_welfare']?></span></td>
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['competance_of_faculty']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['acd_reputation']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['co_curi_edu']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['sports']?></span></td>
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['life_skill']?></span></td>
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['individual_attention']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['mgm_quality']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['parental_involve']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['infrastructure']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['internationalism']?></span></td>
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['special_needs']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['value_for_money']?></span></td> 
+                               <td class="list__cell"style="display:none;" ><span class="list__value" ><?php echo $r['comm_service']?></span></td> 
+                               <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['research']?></span></td>
+                               <td class="list__cell" style=""><span class="list__value"><canvas id="barChart<?php echo $i; ?>" class="cach"></canvas></span></td>
+                                
+                        <?php
+                             $records[]=$r;
+                              $x=json_encode($records);
+                            }
+                        }
+                        ?>
+                        
+                        
+                       
                     </tr>
                     <?php
                     }
@@ -90,129 +129,7 @@
     {
     echo "No Record Found";
     }
-    ?>
-                 <!--   <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/sebastian-vettel/_jcr_content/image.img.1920.medium.jpg/1533294389985.jpg" data-nationality="German" data-dob="1987-07-03" data-country="de">
-                        <td class="list__cell"><span class="list__value">2</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/valtteri-bottas/_jcr_content/image.img.1920.medium.jpg/1536135115661.jpg" data-nationality="Finnish" data-dob="1989-08-28" data-country="fi">
-                        <td class="list__cell"><span class="list__value">3</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/kimi-raikkonen/_jcr_content/image.img.1920.medium.jpg/1544714269466.jpg" data-nationality="Finnish" data-dob="1979-10-17" data-country="fi">
-                        <td class="list__cell"><span class="list__value">4</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/daniel-ricciardo/_jcr_content/image.img.1920.medium.jpg/1544714300924.jpg" data-nationality="Australian" data-dob="1989-07-01" data-country="au">
-                        <td class="list__cell"><span class="list__value">5</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/max-verstappen/_jcr_content/image.img.1920.medium.jpg/1536135200444.jpg" data-nationality="Dutch" data-dob="1997-09-30" data-country="nl">
-                        <td class="list__cell"><span class="list__value">6</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="Spanish" data-dob="1981-07-29" data-country="es">
-                        <td class="list__cell"><span class="list__value">7</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/nico-hulkenberg/_jcr_content/image.img.1920.medium.jpg/1536135087181.jpg" data-nationality="German" data-dob="1987-08-19" data-country="de">
-                        <td class="list__cell"><span class="list__value">8</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/kevin-magnussen/_jcr_content/image.img.1920.medium.jpg/1536135077427.jpg" data-nationality="Danish" data-dob="1992-10-05" data-country="dk">
-                        <td class="list__cell"><span class="list__value">9</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/carlos-sainz/_jcr_content/image.img.1920.medium.jpg/1544796007483.jpg" data-nationality="Spanish" data-dob="1994-09-01" data-country="es">
-                        <td class="list__cell"><span class="list__value">10</span></td>
-                        <td class="list__cell"><span class="list__value">Lewis Hamilton School</span></td>
-                        <td class="list__cell"><span class="list__value">Mumbai</span>
-                        <td class="list__cell"><span class="list__value">Maharashtra</span>
-                        <td class="list__cell"><span class="list__value">95</span><small class="list__label">Points</small></td>
-                    </tr> 
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/sergio-perez/_jcr_content/image.img.1920.medium.jpg/1536135110814.jpg" data-nationality="Mexican" data-dob="1990-01-26" data-country="mx">
-                        <td class="list__cell"><span class="list__value">11</span></td>
-                        <td class="list__cell"><span class="list__value">Sergio Pérez</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Force India</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">17</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/pierre-gasly/_jcr_content/image.img.1920.medium.jpg/1544714186959.jpg" data-nationality="French" data-dob="1987-07-03" data-country="fr">
-                        <td class="list__cell"><span class="list__value">12</span></td>
-                        <td class="list__cell"><span class="list__value">Pierre Gasly</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Toro Rosso</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">12</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/charles-leclerc/_jcr_content/image.img.1920.medium.jpg/1544714150783.jpg" data-nationality="Monegasque" data-dob="1997-10-16" data-country="mc">
-                        <td class="list__cell"><span class="list__value">13</span></td>
-                        <td class="list__cell"><span class="list__value">Charles Leclerc</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Sauber</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">9</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="Belgian" data-dob="1992-03-26" data-country="be">
-                        <td class="list__cell"><span class="list__value">14</span></td>
-                        <td class="list__cell"><span class="list__value">Stoffel Vandoorne</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">McLaren</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">8</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/lance-stroll/_jcr_content/image.img.1920.medium.jpg/1544714229187.jpg" data-nationality="Canadian" data-dob="1998-10-29" data-country="ca">
-                        <td class="list__cell"><span class="list__value">15</span></td>
-                        <td class="list__cell"><span class="list__value">Lance Stroll</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Williams</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">4</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="Swedish" data-dob="1990-09-02" data-country="se">
-                        <td class="list__cell"><span class="list__value">16</span></td>
-                        <td class="list__cell"><span class="list__value">Marcus Ericsson</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Sauber</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">2</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="French" data-dob="1996-09-17" data-country="fr">
-                        <td class="list__cell"><span class="list__value">17</span></td>
-                        <td class="list__cell"><span class="list__value">Esteban Ocon</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Force India</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">1</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="New Zealander" data-dob="1989-11-10" data-country="nz">
-                        <td class="list__cell"><span class="list__value">18</span></td>
-                        <td class="list__cell"><span class="list__value">Brendon Hartley</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Toro Rosso</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">1</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://www.formula1.com/content/fom-website/en/drivers/romain-grosjean/_jcr_content/image.img.1920.medium.jpg/1536135092872.jpg" data-nationality="French" data-dob="1986-04-17" data-country="fr">
-                        <td class="list__cell"><span class="list__value">19</span></td>
-                        <td class="list__cell"><span class="list__value">Romain Grosjean</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Haas F1 Team</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">0</span><small class="list__label">Points</small></td>
-                    </tr>
-                    <tr class="list__row" data-image="https://via.placeholder.com/300" data-nationality="Russian" data-dob="1995-08-27" data-country="ru">
-                        <td class="list__cell"><span class="list__value">20</span></td>
-                        <td class="list__cell"><span class="list__value">Sergey Sirotkin</span><small class="list__label">Driver</small></td>
-                        <td class="list__cell"><span class="list__value">Williams</span><small class="list__label">Constructor</small></td>
-                        <td class="list__cell"><span class="list__value">0</span><small class="list__label">Points</small></td>
-                    </tr> -->
+    ?>        
                 </table>
             </div>
         </div>
@@ -229,8 +146,8 @@
                 </svg>
             </button>
         </div>
-        <div class="sidebar__body"></div>
-    </div>
+        <div class="sidebar__body"></div>  
+        </div>
     <!-- Footer -->
     <footer class="page-footer special-color-dark pt-4">
 
@@ -357,5 +274,125 @@
     </footer>
     <!-- Footer -->
     <script src="app.js"></script>
+    
+<script>
+  function myFunction() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[1];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+function myFunction2() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput2");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[2];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+function myFunction3() {
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myInput3");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myTable");
+  tr = table.getElementsByTagName("tr");
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[3];
+    if (td) {
+      txtValue = td.textContent || td.innerText;
+      if (txtValue.toUpperCase().indexOf(filter) > -1) {
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }       
+  }
+}
+</script>
+ <script>
+        $(document).ready(function(){
+            $.ajax({
+                beforeSend: function() {
+                    console.log("Making AJAX request");
+                },
+                //cache: false,
+                //url: 'index.php',
+                //dataType: 'json',
+                success: function(res) {
+                    var graphLabels = [1,2,3,4],
+                        graphData = [4,5,10,12];
+                    for(var i=0;i<3;i++){
+                        graphData[i];
+                        graphLabels[i];
+                    }
+                    
+                    //Make a call to the function to draw the bar graph
+                    drawGraph(graphLabels, graphData);
+                },
+                complete: function() {
+                    console.log("AJAX request done");
+                },
+                error: function() {
+                    console.log("Error occurred during AJAX request")
+                }               
+            });
+        }); 
+       
+        function drawGraph(Labels, Data){
+            for(var i=1;i<myTable.rows.length;i++)
+            {
+            var chid="barChart"+i;
+            var ctx= document.getElementById(chid);
+            if(ctx.getContext)
+            {
+            var ctxB= ctx.getContext('2d');
+            var myBarChart = new Chart(ctxB, {
+                type: 'horizontalBar',
+                data: {
+                    labels: Labels,
+                    datasets: [{
+                        label: 'no. of visits',
+                        data: Data,
+                        backgroundColor:'#0318CF',
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    scales: {
+                        xAxes: [{
+                            ticks: {
+                                beginAtZero:true
+                            }
+                        }]
+                    }
+                }
+            });
+            }
+        }
+        }
+        
+    </script>
 </body>
 </html>
