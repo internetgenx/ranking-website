@@ -4,7 +4,7 @@
 <head>
     <title>Ranking Website</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
+    
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
@@ -114,7 +114,15 @@
                                 
                         <?php
                              $records[]=$r;
+							 $myDataRawArray = [$r['teacher_welfare'],$r['competance_of_faculty'],$r['acd_reputation'],$r['co_curi_edu']];
+							 //print_r($myDataRawArray);
                               $x=json_encode($records);
+							  $y=json_encode($myDataRawArray);
+							  $z[]=$y;
+							  //array_push($z, $y);
+							  echo json_encode($z[0]);
+							 
+							  
                             }
                         }
                         ?>
@@ -273,6 +281,7 @@
 
     </footer>
     <!-- Footer -->
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="app.js"></script>
     
 <script>
@@ -340,16 +349,24 @@ function myFunction3() {
                 //cache: false,
                 //url: 'index.php',
                 //dataType: 'json',
+				//console.log(myDataRawArray);
                 success: function(res) {
-                    var graphLabels = [1,2,3,4],
-                        graphData = [4,5,10,12];
-                    for(var i=0;i<3;i++){
-                        graphData[i];
-                        graphLabels[i];
-                    }
+					var intermediate_data = <?php echo json_encode($z)?>;
+					//console.log(intermediate_data);
+					for(var i=0;i<myTable.rows.length-2;i++){
+						
+						var graphLabels = [1,2,3,4];
+						
+						var graphData = intermediate_data[i];
+					    //console.log(graphData);
+						console.log("Before draw");
+
+						//Make a call to the function to draw the bar graph
+						drawGraph(graphLabels, graphData, i+1);
+						console.log("After draw");
+							
+					}
                     
-                    //Make a call to the function to draw the bar graph
-                    drawGraph(graphLabels, graphData);
                 },
                 complete: function() {
                     console.log("AJAX request done");
@@ -360,9 +377,8 @@ function myFunction3() {
             });
         }); 
        
-        function drawGraph(Labels, Data){
-            for(var i=1;i<myTable.rows.length;i++)
-            {
+        function drawGraph(Labels, Data, i){
+            console.log(Data);
             var chid="barChart"+i;
             var ctx= document.getElementById(chid);
             if(ctx.getContext)
@@ -391,8 +407,8 @@ function myFunction3() {
             });
             }
         }
-        }
         
     </script>
+	
 </body>
 </html>
