@@ -114,13 +114,13 @@
                                 
                         <?php
                              $records[]=$r;
-							 $myDataRawArray = [$r['teacher_welfare'],$r['competance_of_faculty'],$r['acd_reputation'],$r['co_curi_edu']];
+							 $myDataRawArray = [$r['teacher_welfare'],$r['competance_of_faculty'],$r['acd_reputation'],$r['co_curi_edu'],$r['sports'],$r['life_skill'],$r['individual_attention'],$r['mgm_quality'],$r['parental_involve'],$r['infrastructure'],$r['internationalism'],$r['special_needs'],$r['value_for_money'],$r['comm_service'],$r['research']];
 							 //print_r($myDataRawArray);
                               $x=json_encode($records);
 							  $y=json_encode($myDataRawArray);
 							  $z[]=$y;
 							  //array_push($z, $y);
-							  echo json_encode($z[0]);
+							  json_encode($z[0]);
 							 
 							  
                             }
@@ -154,7 +154,7 @@
                 </svg>
             </button>
         </div>
-        <div class="sidebar__body"></div>  
+        <div class="sidebar__body"></div>
         </div>
     <!-- Footer -->
     <footer class="page-footer special-color-dark pt-4">
@@ -355,9 +355,9 @@ function myFunction3() {
 					//console.log(intermediate_data);
 					for(var i=0;i<myTable.rows.length-2;i++){
 						
-						var graphLabels = [1,2,3,4];
+						var graphLabels = ['Teacher Welfare','Competance of Faculty','Academic Reputation','Co-Curicular Education','Sports','Life Skills','Individual Attention to Students','Leadership/Management Quality','Parental Involvement','Infrastructure Provision','Internationalism','Special Needs Education','Value for Money','Community Service','Research Based Education'];
 						
-						var graphData = intermediate_data[i];
+						var graphData =eval(intermediate_data[i]);
 					    //console.log(graphData);
 						console.log("Before draw");
 
@@ -397,9 +397,12 @@ function myFunction3() {
                 },
                 options: {
                     scales: {
-                        xAxes: [{
+                        yAxes: [{
                             ticks: {
-                                beginAtZero:true
+                                beginAtZero: true,
+                                steps: 10,
+                                stepValue: 5,
+                                max: 100
                             }
                         }]
                     }

@@ -45,7 +45,6 @@ tableRow.forEach(tableRow => {
     const a13=this.querySelector(".list__cell:nth-of-type(19) .list__value").innerHTML;
     const a14=this.querySelector(".list__cell:nth-of-type(20) .list__value").innerHTML;
     const a15=this.querySelector(".list__cell:nth-of-type(21) .list__value").innerHTML;
-    const a16=document.querySelectorAll("canvas").innerHTML;
     const driverImage = this.dataset.image;
     const driverNationality = this.dataset.nationality;
     const driverDOB = this.dataset.dob;
@@ -149,7 +148,6 @@ tableRow.forEach(tableRow => {
 				</tr>
 			</tbody>
 		</table>`;
-    driverContent.append(a16);
     driverContent.appendChild(driverInfo);
     newDriver.appendChild(driverContent);
     sidebarBody.appendChild(newDriver);
