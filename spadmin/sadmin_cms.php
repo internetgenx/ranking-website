@@ -285,7 +285,7 @@ include('../connection.php');
                 <div class="container-fluid container-fixed-lg">
                     <!-- BEGIN PlACE PAGE CONTENT HERE -->
                     <h1>School Details</h1>
-                    <form action="admin_cms.php" method="post">
+                    <form action="sadmin_cms.php" method="post">
                         <div class="form-group">
                             <label for="nos">Name of School</label>
                             <input type="text" class="form-control" placeholder="Enter School Name" name="nos">
@@ -383,19 +383,37 @@ include('../connection.php');
                         $tnum=$_POST['tnum'];
                         $camp=$_POST['camp'];
                         $key=$_POST['keyword'];
-                        $des=$_POST['descrip']
+                        $des=$_POST['descrip'];
                         
-                        $query="INSERT INTO cms(schoolname,establish,type,board,gender,overview,academics,uniques,admission,students,teachers,campus) VALUES('$nos','$est','$type','$board','$gender','$overview','$acad','$uniq','$ads','$snum','$tnum','$camp')";
+                        $q="Select id FROM ranks WHERE schoolname='$nos'";
+                        $d=mysqli_query($conn,$q);
+                        $result=mysqli_fetch_assoc($d);
+                        $ik=$result['id'];
+                        
+                        $s="Select pid FROM points WHERE points_fk='$ik' ";
+                        $u=mysqli_query($conn,$s);
+                        $resu=mysqli_fetch_assoc($u);
+                        
+                        $ikey=$resu['pid'];
+                        
+                        $query="INSERT INTO cms(schoolname,establish,type,board,gender,overview,academics,uniques,admission,students,teachers,campus,keyword,description,cms_fk) VALUES('$nos','$est','$type','$board','$gender','$overview','$acad','$uniq','$ads','$snum','$tnum','$camp','$key','$des','$ikey')";
                         
                         $data=mysqli_query($conn,$query);
-                        $fid=mysqli_insert_id($conn);
                         
-                        $q="UPDATE ranks SET cms_fk='$fid' WHERE schoolname='$nos'";
+                        
+                        /*$q="Select id FROM ranks WHERE schoolname='$nos'";
                         $d=mysqli_query($conn,$q);
+                        $result=mysqli_fetch_assoc($d);
+                        $ik=$result['id'];
                         
-                        $q="UPDATE points SET cmsp_fk='$fid' WHERE schoolname='$nos'";
-                        $d=mysqli_query($conn,$q);
+                        $s="Select pid FROM points WHERE points_fk='$ik' ";
+                        $u=mysqli_query($conn,$s);
+                        $resu=mysqli_fetch_assoc($u);
                         
+                        $ikey=$resu['pid'];
+                        
+                        $t="UPDATE cms SET cms_fk='$ikey' WHERE schoolname='$nos'";
+                        mysqli_query($conn,$t);*/
                     }
                     ?>
                     <!-- END PLACE PAGE CONTENT HERE -->

@@ -1,47 +1,28 @@
-<!Doctype html>
+ <?php
+include("connection.php");
+?>
 <html>
 
 <head>
     <title>Ranking Website</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-touch-fullscreen" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta content="" name="description" />
+    <meta content="" name="keyword"/>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link rel="stylesheet" href="style.css">
-    <?php
-        include("connection.php");
-        ?>
 </head>
 
 <body>
-    <nav class="navbar sticky-top  navbar-expand-lg navbar-dark bg-dark">
-        <a class="navbar-brand" href="#">Navbar</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-
-        <div class=" navbar ml-auto" id="navbarSupportedContent">
-            <ul class="navbar-nav mr-auto">
-                <li class="nav-item active">
-                    <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Link</a>
-                </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        Dropdown
-                    </a>
-                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-                        <a class="dropdown-item" href="#">Action</a>
-                        <a class="dropdown-item" href="#">Another action</a>
-                        <div class="dropdown-divider"></div>
-                        <a class="dropdown-item" href="#">Something else here</a>
-                    </div>
-                </li>
-            </ul>
-        </div>
-    </nav>
+    <!--Navbar -->
+<?php include("navbar.php"); ?>
+<!--/.Navbar -->
     
     <div class="wrapper">
         <div class="list">
@@ -49,7 +30,7 @@
                 <h1 style="text-align: center">School Ranking in India</h1>
             </div>
             <?php
-   $query="SELECT ranks.points_fk,points.rank,ranks.schoolname,ranks.cityname,ranks.statename,points.score FROM ranks,points WHERE ranks.points_fk=points.id ORDER BY points.rank";
+   $query="SELECT ranks.id ,points.pid,points.points_fk,points.rank,ranks.schoolname,ranks.cityname,ranks.statename,points.score FROM ranks,points WHERE ranks.id=points.points_fk ORDER BY points.rank";
    $data=mysqli_query($conn,$query);
    $total=mysqli_num_rows($data);
    $i=0;
@@ -85,9 +66,20 @@
                         <td class="list__cell"><span class="list__value"><?php echo $result['statename'] ?></span></td>
                          <td class="list__cell"><span class="list__value"><?php echo $result['score'] ?></span><small class="list__label">Points</small></td>
                         <td class="list__cell" style="display:none;" ><span class="list__value" ><?php echo $result['points_fk'] ?></span></td>
+                        <td class="list__cell" style="display:none;"><span class="list__value"><?php
+         $newcontent = file_get_contents("test.php");
+         $newpage="newn.".$result['schoolname'].".php";
+     if (!file_exists($newpage)) 
+     { 
+         $handle = fopen($newpage,'w+'); 
+         fwrite($handle,$newcontent); 
+         fclose($handle); 
+     }
+     ?>
+                  <a href="<?php echo $newpage ?>?sn=<?php echo $result['schoolname'] ?>">Know More</a></span></td>
                         <?php
-                        $id=$result['points_fk'];
-                        $q="SELECT * FROM points WHERE id='$id' ";
+                        $id=$result['pid'];
+                        $q="SELECT * FROM points WHERE pid='$id' ";
                         $d=mysqli_query($conn,$q);
                         $t=mysqli_num_rows($d);
                         if($t!=0)
@@ -110,7 +102,7 @@
                                <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['value_for_money']?></span></td> 
                                <td class="list__cell"style="display:none;" ><span class="list__value" ><?php echo $r['comm_service']?></span></td> 
                                <td class="list__cell" style="display:none;"><span class="list__value" ><?php echo $r['research']?></span></td>
-                               <td class="list__cell" style=""><span class="list__value"><canvas id="barChart<?php echo $i; ?>" class="cach"></canvas></span></td>
+                               <td class="list__cell" style="display:none;"><span class="list__value"><canvas id="barChart<?php echo $i; ?>" class="cach"></canvas></span></td>
                                 
                         <?php
                              $records[]=$r;
@@ -157,129 +149,7 @@
         <div class="sidebar__body"></div>
         </div>
     <!-- Footer -->
-    <footer class="page-footer special-color-dark pt-4">
-
-        <!-- Footer Links -->
-        <div class="container text-center text-md-left">
-
-            <!-- Grid row -->
-            <div class="row">
-
-                <!-- Grid column -->
-                <div class="col-md-3 mx-auto">
-
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">Very long link 1</a>
-                        </li>
-                        <li>
-                            <a href="#!">Very long link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!">Very long link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!">Very long link 4</a>
-                        </li>
-                    </ul>
-
-                </div>
-                <!-- Grid column -->
-
-                <hr class="clearfix w-100 d-md-none">
-
-                <!-- Grid column -->
-                <div class="col-md-3 mx-auto">
-
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 4</a>
-                        </li>
-                    </ul>
-
-                </div>
-                <!-- Grid column -->
-
-                <hr class="clearfix w-100 d-md-none">
-
-                <!-- Grid column -->
-                <div class="col-md-3 mx-auto">
-
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 4</a>
-                        </li>
-                    </ul>
-
-                </div>
-                <!-- Grid column -->
-
-                <hr class="clearfix w-100 d-md-none">
-
-                <!-- Grid column -->
-                <div class="col-md-3 mx-auto">
-
-                    <!-- Links -->
-                    <h5 class="font-weight-bold text-uppercase mt-3 mb-4">Links</h5>
-
-                    <ul class="list-unstyled">
-                        <li>
-                            <a href="#!">Link 1</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 2</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 3</a>
-                        </li>
-                        <li>
-                            <a href="#!">Link 4</a>
-                        </li>
-                    </ul>
-
-                </div>
-                <!-- Grid column -->
-
-            </div>
-            <!-- Grid row -->
-
-        </div>
-        <!-- Footer Links -->
-
-        <!-- Copyright -->
-        <div class="footer-copyright text-center py-3">© 2018 Copyright:
-            <span>XYZ Company</span>
-        </div>
-        <!-- Copyright -->
-
-    </footer>
+    <?php include('footer.php'); ?>
     <!-- Footer -->
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.8.0/Chart.min.js"></script>
     <script src="app.js"></script>

@@ -1,5 +1,6 @@
 <?php
 include('../connection.php');
+$id=$_GET['ns'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -282,43 +283,106 @@ include('../connection.php');
                 </div>
                 <!-- END JUMBOTRON -->
                 <!-- START CONTAINER FLUID -->
+                <?php
+                
+                $query="SELECT *FROM cms WHERE cmsid='$id'";
+                $data=mysqli_query($conn,$query);
+                $total=mysqli_num_rows($data);
+                if($total)
+                {
+                  while($result=mysqli_fetch_assoc($data))
+                  {
+                ?>
                 <div class="container-fluid container-fixed-lg">
                     <!-- BEGIN PlACE PAGE CONTENT HERE -->
                     <h1>School Details</h1>
-                    <form action="admin_cms.php" method="post">
+                    <form action="update_cms.php?ns=<?php echo $id ?>" method="post">
                         <div class="form-group">
                             <label for="nos">Name of School</label>
-                            <input type="text" class="form-control" placeholder="Enter School Name" name="nos">
+                            <h5><?php echo $result['schoolname']; ?></h5>
                         </div>
                         <div class="form-group">
                             <label for="nos">Establish in Year</label>
-                            <input type="text" class="form-control" name="est">
+                            <input type="text" class="form-control" name="est" value="<?php echo $result['establish']; ?>">
                         </div>
                         <div class="row clearfix">
                             <div class="form-group col-md-4">
                                 <label for="sc">Type</label>
                                 <select id="type" class="form-control" name="type">
-                                    <option value="null">Choose...</option>
-                                    <option value="public">Public</option>
-                                    <option value="private">Private</option>
+                                    <option value="public"
+                                    <?php
+                                    if($result['type']=='public')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >Public</option>
+                                    <option value="private"
+                                    <?php
+                                    if($result['type']=='private')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >Private</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="board">Board</label>
                                 <select id="board" class="form-control" name="board">
-                                    <option value="null">Choose...</option>
-                                    <option value="cbse">CBSE</option>
-                                    <option value="icse">ICSE</option>
-                                    <option value="stateboard">State Board</option>
+                                    <option value="cbse"
+                                    <?php
+                                    if($result['board']=='cbse')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >CBSE</option>
+                                    <option value="icse"
+                                    <?php
+                                    if($result['board']=='icse')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >ICSE</option>
+                                    <option value="stateboard"
+                                    <?php
+                                    if($result['board']=='stateboard')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >State Board</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="gender">Gender Accepted</label>
                                 <select id="gender" class="form-control" name="gender">
-                                    <option value="null">Choose...</option>
-                                    <option value="co-ed">Co-ed</option>
-                                    <option value="boys">Boys</option>
-                                    <option value="girls">Girls</option>
+                                    <option value="co-ed"
+                                    <?php
+                                    if($result['gender']=='co-ed')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >Co-ed</option>
+                                    <option value="boys"
+                                     <?php
+                                    if($result['gender']=='boys')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >Boys</option>
+                                    <option value="girls"
+                                    <?php
+                                    if($result['gender']=='girls')
+                                    {
+                                        echo "selected";
+                                    }
+                                    ?>
+                                    >Girls</option>
                                 </select>
                             </div>
                         </div>
@@ -326,51 +390,58 @@ include('../connection.php');
                             <h3>About the School</h3>
                             <div class="form-group">
                                 <label for="overview">Overview of Your School</label>
-                                <textarea class="form-control" rows="5" id="overview" name="overview" style="resize:none; height: 10em;"></textarea>
+                                <textarea class="form-control" rows="5" id="overview" name="overview" style="resize:none; height: 10em;"><?php echo $result["overview"];?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="acad">Brief Desciption About your Academics</label>
-                                <textarea class="form-control" rows="5" id="acad" name="acad" style="resize:none; height: 10em;"></textarea>
+                                <textarea class="form-control" rows="5" id="acad" name="acad" style="resize:none; height: 10em;" ><?php echo $result['academics'];?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="uniq">Unique features or Achievements of your School</label>
-                                <textarea class="form-control" rows="5" id="uniq" name="uniq" style="resize:none; height: 10em;"></textarea>
+                                <textarea class="form-control" rows="5" id="uniq" name="uniq" style="resize:none; height: 10em;"><?php echo $result['uniques'];?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="admission">Admission Procedure</label>
-                                <textarea class="form-control" rows="5" id="admission" name="admission" style="resize:none; height: 10em;"></textarea>
+                                <textarea class="form-control" rows="5" id="admission" name="admission" style="resize:none; height: 10em;" ><?php echo $result['admission'];?></textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
                          <div class="form-group col-md-4">
                             <label for="snum">No of students</label>
-                            <input type="text" class="form-control" name="snum">
+                            <input type="text" class="form-control" name="snum" value="<?php echo $result['students'];?>">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="tnum">No of teachers</label>
-                            <input type="text" class="form-control" name="tnum">
+                            <input type="text" class="form-control" name="tnum" value="<?php echo $result['teachers'];?>">
                         </div>
                         <div class="form-group col-md-4">
                             <label for="camp">Campus size in Acres</label>
-                            <input type="text" class="form-control" name="camp">
+                            <input type="text" class="form-control" name="camp" value="<?php echo $result['campus'];?>">
                         </div>
                         </div>
                         <div class="form-group">
                             <label for="keyword">Keywords to be used in meta tag</label>
-                            <input type="text" class="form-control" name="keyword">
+                            <input type="text" class="form-control" name="keyword" value="<?php echo $result['keyword'];?>">
                         </div>
                         <div class="form-group">
                             <label for="descrip">Description to be used in meta tag?</label>
-                            <input type="text" class="form-control" name="descrip">
+                            <input type="text" class="form-control" name="descrip" value="<?php echo $result['description'];?>">
                         </div>
                          <div class="form-group">
-                                <button type="submit" name="submit" class="btn btn-primary">Submit</button>
+                                <button type="submit" name="submit" class="btn btn-primary">Update</button>
                             </div>
                     </form>
-                    <?php 
-                    if(isset($_POST['submit']))
-                    {
-                        $nos=$_POST['nos'];
+                    <?php
+                  }
+                }
+                    ?>
+                    <!-- END PLACE PAGE CONTENT HERE -->
+                </div>
+                <!-- END CONTAINER FLUID -->
+            </div>
+            <?php
+            if(isset($_POST['submit']))
+            {           
                         $est=$_POST['est'];
                         $type=$_POST['type'];
                         $board=$_POST['board'];
@@ -383,25 +454,20 @@ include('../connection.php');
                         $tnum=$_POST['tnum'];
                         $camp=$_POST['camp'];
                         $key=$_POST['keyword'];
-                        $des=$_POST['descrip']
-                        
-                        $query="INSERT INTO cms(schoolname,establish,type,board,gender,overview,academics,uniques,admission,students,teachers,campus) VALUES('$nos','$est','$type','$board','$gender','$overview','$acad','$uniq','$ads','$snum','$tnum','$camp')";
-                        
-                        $data=mysqli_query($conn,$query);
-                        $fid=mysqli_insert_id($conn);
-                        
-                        $q="UPDATE ranks SET cms_fk='$fid' WHERE schoolname='$nos'";
-                        $d=mysqli_query($conn,$q);
-                        
-                        $q="UPDATE points SET cmsp_fk='$fid' WHERE schoolname='$nos'";
-                        $d=mysqli_query($conn,$q);
-                        
-                    }
-                    ?>
-                    <!-- END PLACE PAGE CONTENT HERE -->
-                </div>
-                <!-- END CONTAINER FLUID -->
-            </div>
+                        $des=$_POST['descrip'];
+                
+                $query="UPDATE cms SET establish='$est', type='$type', board='$board', gender='$gender', overview='$overview',academics='$acad', uniques='$uniq', admission='$ads', students='$snum',teachers='$tnum',campus='$camp', keyword='$key', description='$des' WHERE cmsid='$id'";
+                $data=mysqli_query($conn,$query);
+                if($data)
+                {
+                 echo "updated";
+                }
+                else
+                {
+                 echo mysqli_error($conn);
+                }
+            }
+            ?>
             <!-- END PAGE CONTENT -->
             <!-- START FOOTER -->
             <div class="container-fluid container-fixed-lg footer">

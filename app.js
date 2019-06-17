@@ -31,20 +31,6 @@ tableRow.forEach(tableRow => {
     const driverPoints = this.querySelector(".list__cell:nth-of-type(4) .list__value").innerHTML;
     const totalScore=this.querySelector(".list__cell:nth-of-type(5) .list__value").innerHTML;
     const a1=this.querySelector(".list__cell:nth-of-type(7) .list__value").innerHTML;
-    const a2=this.querySelector(".list__cell:nth-of-type(8) .list__value").innerHTML;
-    const a3=this.querySelector(".list__cell:nth-of-type(9) .list__value").innerHTML;
-    const a4=this.querySelector(".list__cell:nth-of-type(10) .list__value").innerHTML;
-    const a5=this.querySelector(".list__cell:nth-of-type(11) .list__value").innerHTML;
-    const a6=this.querySelector(".list__cell:nth-of-type(12) .list__value").innerHTML;
-    const a7=this.querySelector(".list__cell:nth-of-type(13) .list__value").innerHTML;
-    const a8=this.querySelector(".list__cell:nth-of-type(14) .list__value").innerHTML;
-    const a9=this.querySelector(".list__cell:nth-of-type(15) .list__value").innerHTML;
-    const a10=this.querySelector(".list__cell:nth-of-type(16) .list__value").innerHTML;
-    const a11=this.querySelector(".list__cell:nth-of-type(17) .list__value").innerHTML;
-    const a12=this.querySelector(".list__cell:nth-of-type(18) .list__value").innerHTML;
-    const a13=this.querySelector(".list__cell:nth-of-type(19) .list__value").innerHTML;
-    const a14=this.querySelector(".list__cell:nth-of-type(20) .list__value").innerHTML;
-    const a15=this.querySelector(".list__cell:nth-of-type(21) .list__value").innerHTML;
     const driverImage = this.dataset.image;
     const driverNationality = this.dataset.nationality;
     const driverDOB = this.dataset.dob;
@@ -87,64 +73,8 @@ tableRow.forEach(tableRow => {
 					<td>${totalScore}</td>
 				</tr>
                 <tr>
-					<td><small>Teacher Welfare</small></td>
+                    <td></td>
 					<td>${a1}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a2}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a3}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a4}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a5}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a6}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a7}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a8}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a9}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a10}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a11}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a12}</td>
-				</tr>
-               <tr>
-					<td><small>Score</small></td>
-					<td>${a13}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a14}</td>
-				</tr>
-                <tr>
-					<td><small>Score</small></td>
-					<td>${a15}</td>
 				</tr>
 			</tbody>
 		</table>`;

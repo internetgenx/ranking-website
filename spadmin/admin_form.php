@@ -1,5 +1,7 @@
 <?php 
 include('../connection.php');
+session_start();
+
 ?>
 <html>
 
@@ -67,17 +69,17 @@ include('../connection.php');
                 </li>
                 <li class="">
                     <a href="javascript:;">
-                        <span class="title">Page 3</span>
+                        <span class="title">CMS</span>
                         <span class=" arrow"></span>
                     </a>
                     <span class="icon-thumbnail"><i class="pg-grid"></i></span>
                     <ul class="sub-menu">
                         <li class="">
-                            <a href="#">Sub Page 1</a>
+                            <a href="admin_cms.php">Add Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                         <li class="">
-                            <a href="#">Sub Page 2</a>
+                            <a href="cms_edit.php">Edit Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                         <li class="">
@@ -249,7 +251,7 @@ include('../connection.php');
                         <a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
                         <a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
                         <a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
-                        <a href="#" class="clearfix bg-master-lighter dropdown-item">
+                        <a href="admin_logout.php" class="clearfix bg-master-lighter dropdown-item">
                             <span class="pull-left">Logout</span>
                             <span class="pull-right"><i class="pg-power"></i></span>
                         </a>
@@ -458,9 +460,9 @@ include('../connection.php');
                         </div>
                         <button type="submit" class="btn btn-primary" name='submit'>Submit</button>
                     </form>
-
+                    
                     <?php
-
+                    
                     if(isset($_POST['submit']))
                     {
                         $name= $_POST['nos'];
@@ -475,7 +477,6 @@ include('../connection.php');
                         $mobno= $_POST['mobno'];
                         $screg= $_POST['screg'];
                         $board= $_POST['board'];
-                        $oboard= $_POST['oboard'];
                         $email= $_POST['mail'];
                         $pass= $_POST['pass'];
                         $pwd= hash('sha256',$pass);
@@ -496,18 +497,22 @@ include('../connection.php');
                         $comms= $_POST['comms'];
                         $rbe= $_POST['rbe'];
                         
-                        $q=" INSERT INTO points(teacher_welfare,competance_of_faculty,acd_reputation,co_curi_edu,sports,life_skill,individual_attention,mgm_quality,parental_involve,infrastructure,internationalism,special_needs,value_for_money,comm_service,research) VALUES('$twad','$cof','$acadr','$cce','$sport','$lse','$iats','$lmq','$pari','$infra','$inters','$sne','$vom','$comms','$rbe')";
+                        
+                        $query = "INSERT INTO ranks(schoolname,address,cityname,statename,pin,startingclass,endingclass,contactperson,phone,mobile,regno,board,email,password,website) VALUES('$name','$addr','$city','$state','$pin','$sc','$ec','$pname','$phno','$mobno','$screg','$board','$email','$pwd','$web') ";
 
-                        mysqli_query($conn,$q);
+                        mysqli_query($conn,$query);
                         
                         $fid=mysqli_insert_id($conn);
                         
-                        $query = " INSERT INTO ranks(schoolname,address,cityname,statename,pin,startingclass,endingclass,contactperson,phone,mobile,regno,board,other,email,password,website,points_fk) VALUES('$name','$addr','$city','$state','$pin','$sc','$ec','$pname','$phno','$mobno','$screg','$board','$oboard','$email','$pwd','$web','$fid') ";
-
-                        mysqli_query($conn,$query);
-                            
                         
-                        $qe= " UPDATE points SET score= (teacher_welfare+competance_of_faculty+acd_reputation+co_curi_edu+sports+life_skill+individual_attention+mgm_quality+parental_involve+infrastructure+internationalism+special_needs+value_for_money+comm_service+research) WHERE id='$fid' ";
+                        $q="INSERT INTO points(teacher_welfare,competance_of_faculty,acd_reputation,co_curi_edu,sports,life_skill,individual_attention,mgm_quality,parental_involve,infrastructure,internationalism,special_needs,value_for_money,comm_service,research,points_fk) VALUES('$twad','$cof','$acadr','$cce','$sport','$lse','$iats','$lmq','$pari','$infra','$inters','$sne','$vom','$comms','$rbe','$fid')";
+
+                         mysqli_query($conn,$q);
+        
+                        $fod=mysqli_insert_id($conn);
+                        
+                        
+                        $qe= " UPDATE points SET score= (teacher_welfare+competance_of_faculty+acd_reputation+co_curi_edu+sports+life_skill+individual_attention+mgm_quality+parental_involve+infrastructure+internationalism+special_needs+value_for_money+comm_service+research) WHERE pid='$fod' ";
                         
                         mysqli_query($conn,$qe);
                         
@@ -518,16 +523,15 @@ include('../connection.php');
                         $i = 0;
                         while($row = mysqli_fetch_assoc($d)) {
                          $i++;
-                          $userid=$row['id'];
+                          $userid=$row['pid'];
                             if( $last_score!= $row['score'] ){
                              $last_score = $row['score'];
                              $rank = $i;
                         
                             }
-                            $m="UPDATE points SET rank='$rank' WHERE id='$userid'";
+                            $m="UPDATE points SET rank='$rank' WHERE pid='$userid' ";
                             mysqli_query($conn,$m);
                         }
-                        
                        
                         
     
