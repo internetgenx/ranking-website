@@ -1,6 +1,10 @@
 <?php 
 include('../connection.php');
 session_start();
+if(!$_SESSION['user_name'])
+{
+    header('location:not_log.php');
+}
 
 ?>
 <html>
@@ -54,20 +58,13 @@ session_start();
         <div class="sidebar-menu">
             <!-- BEGIN SIDEBAR MENU ITEMS-->
             <ul class="menu-items">
-                <li class="m-t-30">
-                    <a href="#" class="detailed">
-                        <span class="title">Page 1</span>
-                        <span class="details">234 notifications</span>
-                    </a>
-                    <span class="icon-thumbnail "><i class="pg-mail"></i></span>
-                </li>
                 <li class="">
-                    <a href="#">
-                        <span class="title">Page 2</span>
+                    <a href="admin_form.php">
+                        <span class="title">Form</span>
                     </a>
-                    <span class="icon-thumbnail "><i class="pg-social"></i></span>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
-                <li class="">
+               <li class="">
                     <a href="javascript:;">
                         <span class="title">CMS</span>
                         <span class=" arrow"></span>
@@ -75,18 +72,20 @@ session_start();
                     <span class="icon-thumbnail"><i class="pg-grid"></i></span>
                     <ul class="sub-menu">
                         <li class="">
-                            <a href="admin_cms.php">Add Content</a>
+                            <a href="sadmin_cms.php">Add Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                         <li class="">
                             <a href="cms_edit.php">Edit Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
-                        <li class="">
-                            <a href="#">Sub Page 3</a>
-                            <span class="icon-thumbnail">sp</span>
-                        </li>
                     </ul>
+                </li>
+                 <li class="">
+                    <a href="active_admin.php">
+                        <span class="title">Activate Account</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
             </ul>
             <div class="clearfix"></div>
@@ -465,42 +464,51 @@ session_start();
                     
                     if(isset($_POST['submit']))
                     {
-                        $name= $_POST['nos'];
-                        $addr= $_POST['addr'];
-                        $city= $_POST['city'];
-                        $state= $_POST['state'];
-                        $pin= $_POST['pin'];
-                        $sc= $_POST['sc'];
-                        $ec= $_POST['ec'];
-                        $pname= $_POST['cpername'];
-                        $phno= $_POST['phno'];
-                        $mobno= $_POST['mobno'];
-                        $screg= $_POST['screg'];
-                        $board= $_POST['board'];
-                        $email= $_POST['mail'];
-                        $pass= $_POST['pass'];
+                        $name= mysqli_real_escape_string($conn,$_POST['nos']);
+                        $addr= mysqli_real_escape_string($conn,$_POST['addr']);
+                        $city= mysqli_real_escape_string($conn,$_POST['city']);
+                        $state= mysqli_real_escape_string($conn,$_POST['state']);
+                        $pin= mysqli_real_escape_string($conn,$_POST['pin']);
+                        $sc= mysqli_real_escape_string($conn,$_POST['sc']);
+                        $ec= mysqli_real_escape_string($conn,$_POST['ec']);
+                        $pname= mysqli_real_escape_string($conn,$_POST['cpername']);
+                        $phno= mysqli_real_escape_string($conn,$_POST['phno']);
+                        $mobno= mysqli_real_escape_string($conn,$_POST['mobno']);
+                        $screg= mysqli_real_escape_string($conn,$_POST['screg']);
+                        $board= mysqli_real_escape_string($conn,$_POST['board']);
+                        $email= mysqli_real_escape_string($conn,$_POST['mail']);
+                        $pass= mysqli_real_escape_string($conn,$_POST['pass']);
                         $pwd= hash('sha256',$pass);
-                        $web= $_POST['website'];
-                        $twad= $_POST['twad'];
-                        $cof= $_POST['cof'];
-                        $acadr= $_POST['acadr'];
-                        $cce= $_POST['cce'];
-                        $sport= $_POST['sport'];
-                        $lse= $_POST['lse'];
-                        $iats= $_POST['iats'];
-                        $lmq= $_POST['lmq'];
-                        $pari= $_POST['pari'];
-                        $infra= $_POST['infra'];
-                        $inters= $_POST['inters'];
-                        $sne= $_POST['sne'];
-                        $vom= $_POST['vom'];
-                        $comms= $_POST['comms'];
-                        $rbe= $_POST['rbe'];
+                        $web= mysqli_real_escape_string($conn,$_POST['website']);
+                        $twad= mysqli_real_escape_string($conn,$_POST['twad']);
+                        $cof= mysqli_real_escape_string($conn,$_POST['cof']);
+                        $acadr= mysqli_real_escape_string($conn,$_POST['acadr']);
+                        $cce= mysqli_real_escape_string($conn,$_POST['cce']);
+                        $sport= mysqli_real_escape_string($conn,$_POST['sport']);
+                        $lse= mysqli_real_escape_string($conn,$_POST['lse']);
+                        $iats= mysqli_real_escape_string($conn,$_POST['iats']);
+                        $lmq= mysqli_real_escape_string($conn,$_POST['lmq']);
+                        $pari= mysqli_real_escape_string($conn,$_POST['pari']);
+                        $infra= mysqli_real_escape_string($conn,$_POST['infra']);
+                        $inters= mysqli_real_escape_string($conn,$_POST['inters']);
+                        $sne= mysqli_real_escape_string($conn,$_POST['sne']);
+                        $vom= mysqli_real_escape_string($conn,$_POST['vom']);
+                        $comms= mysqli_real_escape_string($conn,$_POST['comms']);
+                        $rbe= mysqli_real_escape_string($conn,$_POST['rbe']);
                         
                         
                         $query = "INSERT INTO ranks(schoolname,address,cityname,statename,pin,startingclass,endingclass,contactperson,phone,mobile,regno,board,email,password,website) VALUES('$name','$addr','$city','$state','$pin','$sc','$ec','$pname','$phno','$mobno','$screg','$board','$email','$pwd','$web') ";
 
-                        mysqli_query($conn,$query);
+                        $data=mysqli_query($conn,$query);
+                        
+                        if($data)
+                        {
+                            echo "Ok";
+                        }
+                        else
+                        {
+                            echo mysqli_error($conn);
+                        }
                         
                         $fid=mysqli_insert_id($conn);
                         
@@ -533,7 +541,7 @@ session_start();
                             mysqli_query($conn,$m);
                         }
                        
-                        
+                    
     
                      }
                    ?>

@@ -2,8 +2,14 @@
 include('connection.php');
 ?>
 <?php 
-$qn=$_GET['sn'];
-
+$mn=$_GET['sn'];
+$qn=mysqli_real_escape_string($conn,$mn);
+if(!$qn)
+{
+    header('location:about_school.php');
+}
+else
+{
 $query="SELECT * FROM cms,points WHERE cms.schoolname='$qn' AND cms.cms_fk=points.pid";
 $data=mysqli_query($conn,$query);
 $total=mysqli_num_rows($data);
@@ -157,16 +163,19 @@ if($total!=0)
                     <h4>Achievement</h4>
                     <p><?php echo $result['uniques'] ?></p>
                 </div>
+                
                 <div id="photo-gallery">
                     <h4>Photo Galary</h4>
                     <ul class="image-gallery">
-                        <li>
-                            <img src="background.jpg" alt="" />
-                        </li>
-                        <li>
-
-                            <img src="background.jpg" alt="" />
-                        </li>
+                        <?php
+                 $ddn=stripcslashes($qn); 
+                 $files = glob("spadmin/media/$ddn/*.*");
+                for ($i = 0; $i < count($files); $i++) 
+                {
+                    $image = $files[$i];
+                    echo '<li><img src="' . $image . '" alt="Random image" class="img1"/></li>';
+                }
+                        ?>
                     </ul>
                     <div class="clear"></div>
                     <div class="embed-container">
@@ -179,7 +188,11 @@ if($total!=0)
 <?php
       }
 }
-    
+else
+{
+    header('location:about_school.php');
+}
+}
     ?>
     <?php include('footer.php'); ?>
     <script>
@@ -189,7 +202,7 @@ if($total!=0)
                     console.log("Making AJAX request");
                 },
                 //cache: false,
-                url:'<?php echo basename($_SERVER['PHP_SELF']) ?>',
+                url:"<?php echo basename($_SERVER['PHP_SELF']);?>",
                 //dataType: 'json',
 				//console.log(myDataRawArray);
                 success: function(res) {

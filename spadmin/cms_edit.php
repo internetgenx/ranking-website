@@ -1,5 +1,10 @@
 <?php
 include('../connection.php');
+session_start();
+if(!$_SESSION['user_name'])
+{
+    header('location:not_log.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,43 +56,38 @@ include('../connection.php');
       <div class="sidebar-menu">
         <!-- BEGIN SIDEBAR MENU ITEMS-->
         <ul class="menu-items">
-          <li class="m-t-30">
-            <a href="#" class="detailed">
-              <span class="title">Page 1</span>
-              <span class="details">234 notifications</span>
-            </a>
-            <span class="icon-thumbnail "><i class="pg-mail"></i></span>
-          </li>
-          <li class="">
-            <a href="#">
-              <span class="title">Page 2</span>
-            </a>
-            <span class="icon-thumbnail "><i class="pg-social"></i></span>
-          </li>
-          <li class="">
-            <a href="javascript:;">
-              <span class="title">Page 3</span>
-              <span class=" arrow"></span>
-            </a>
-            <span class="icon-thumbnail"><i class="pg-grid"></i></span>
-            <ul class="sub-menu">
-              <li class="">
-                <a href="#">Sub Page 1</a>
-                <span class="icon-thumbnail">sp</span>
-              </li>
-              <li class="">
-                <a href="#">Sub Page 2</a>
-                <span class="icon-thumbnail">sp</span>
-              </li>
-              <li class="">
-                <a href="#">Sub Page 3</a>
-                <span class="icon-thumbnail">sp</span>
-              </li>
+                <li class="">
+                    <a href="admin_form.php">
+                        <span class="title">Form</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
+                </li>
+               <li class="">
+                    <a href="javascript:;">
+                        <span class="title">CMS</span>
+                        <span class=" arrow"></span>
+                    </a>
+                    <span class="icon-thumbnail"><i class="pg-grid"></i></span>
+                    <ul class="sub-menu">
+                        <li class="">
+                            <a href="sadmin_cms.php">Add Content</a>
+                            <span class="icon-thumbnail">sp</span>
+                        </li>
+                        <li class="">
+                            <a href="cms_edit.php">Edit Content</a>
+                            <span class="icon-thumbnail">sp</span>
+                        </li>
+                    </ul>
+                </li>
+                 <li class="">
+                    <a href="active_admin.php">
+                        <span class="title">Activate Account</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
+                </li>
             </ul>
-          </li>
-        </ul>
-        <div class="clearfix"></div>
-      </div>
+            <div class="clearfix"></div>
+        </div>
       <!-- END SIDEBAR MENU -->
     </nav>
     <!-- END SIDEBAR -->
@@ -248,7 +248,7 @@ include('../connection.php');
               <a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
               <a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
               <a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
-              <a href="#" class="clearfix bg-master-lighter dropdown-item">
+              <a href="admin_logout.php" class="clearfix bg-master-lighter dropdown-item">
                 <span class="pull-left">Logout</span>
                 <span class="pull-right"><i class="pg-power"></i></span>
               </a>
@@ -298,6 +298,7 @@ include('../connection.php');
                 <?php
                  while($result=mysqli_fetch_assoc($data))
                  { $id=$result['cmsid'];
+                   $sch=$result['schoolname'];
                     ?>
                       <tr>
                            <td>
@@ -305,7 +306,7 @@ include('../connection.php');
                           </td>
                             <td>
                                 
-                                <button class="btn btn-primary"> <a href="update_cms.php?ns=<?php echo $id?>" class="active" style="color:white;"> Update </a></button>
+                                <button class="btn btn-primary"> <a href="update_cms.php?ns=<?php echo $id; ?>&snp=<?php echo $sch; ?>" class="active" style="color:white;"> Update </a></button>
                             </td>
                         </tr>
                         <?php

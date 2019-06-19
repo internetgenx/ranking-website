@@ -1,6 +1,12 @@
 <?php
 include('../connection.php');
-$id=$_GET['ns'];
+session_start();
+if(!$_SESSION['user_name'])
+{
+    header('location:not_log.php');
+}
+$id=mysqli_real_escape_string($conn,$_GET['ns']);
+$sch=$_GET['snp'];
 ?>
 <!DOCTYPE html>
 <html>
@@ -29,6 +35,19 @@ $id=$_GET['ns'];
 
     <link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
     <link class="main-stylesheet" href="pages/css/pages.css" rel="stylesheet" type="text/css" />
+
+    <style type="text/css">
+        #image_preview {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        #image_preview img {
+            width: 200px;
+            padding: 5px;
+        }
+
+    </style>
 </head>
 
 <body class="fixed-header">
@@ -55,39 +74,34 @@ $id=$_GET['ns'];
         <div class="sidebar-menu">
             <!-- BEGIN SIDEBAR MENU ITEMS-->
             <ul class="menu-items">
-                <li class="m-t-30">
-                    <a href="#" class="detailed">
-                        <span class="title">Page 1</span>
-                        <span class="details">234 notifications</span>
-                    </a>
-                    <span class="icon-thumbnail "><i class="pg-mail"></i></span>
-                </li>
                 <li class="">
-                    <a href="#">
-                        <span class="title">Page 2</span>
+                    <a href="admin_form.php">
+                        <span class="title">Form</span>
                     </a>
-                    <span class="icon-thumbnail "><i class="pg-social"></i></span>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
                 <li class="">
                     <a href="javascript:;">
-                        <span class="title">Page 3</span>
+                        <span class="title">CMS</span>
                         <span class=" arrow"></span>
                     </a>
                     <span class="icon-thumbnail"><i class="pg-grid"></i></span>
                     <ul class="sub-menu">
                         <li class="">
-                            <a href="#">Sub Page 1</a>
+                            <a href="sadmin_cms.php">Add Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                         <li class="">
-                            <a href="#">Sub Page 2</a>
-                            <span class="icon-thumbnail">sp</span>
-                        </li>
-                        <li class="">
-                            <a href="#">Sub Page 3</a>
+                            <a href="cms_edit.php">Edit Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                     </ul>
+                </li>
+                <li class="">
+                    <a href="active_admin.php">
+                        <span class="title">Activate Account</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
             </ul>
             <div class="clearfix"></div>
@@ -252,7 +266,7 @@ $id=$_GET['ns'];
                         <a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
                         <a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
                         <a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
-                        <a href="#" class="clearfix bg-master-lighter dropdown-item">
+                        <a href="admin_logout.php" class="clearfix bg-master-lighter dropdown-item">
                             <span class="pull-left">Logout</span>
                             <span class="pull-right"><i class="pg-power"></i></span>
                         </a>
@@ -296,10 +310,12 @@ $id=$_GET['ns'];
                 <div class="container-fluid container-fixed-lg">
                     <!-- BEGIN PlACE PAGE CONTENT HERE -->
                     <h1>School Details</h1>
-                    <form action="update_cms.php?ns=<?php echo $id ?>" method="post">
+                    <form action="update_cms.php?ns=<?php echo $id; ?>&snp=<?php echo $sch; ?>" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nos">Name of School</label>
-                            <h5><?php echo $result['schoolname']; ?></h5>
+                            <h5>
+                                <?php echo $result['schoolname']; ?>
+                            </h5>
                         </div>
                         <div class="form-group">
                             <label for="nos">Establish in Year</label>
@@ -309,80 +325,32 @@ $id=$_GET['ns'];
                             <div class="form-group col-md-4">
                                 <label for="sc">Type</label>
                                 <select id="type" class="form-control" name="type">
-                                    <option value="public"
-                                    <?php
-                                    if($result['type']=='public')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >Public</option>
-                                    <option value="private"
-                                    <?php
-                                    if($result['type']=='private')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >Private</option>
+                                    <option value="public" <?php if($result['type']=='public' ) { echo "selected" ; } ?>
+                                        >Public</option>
+                                    <option value="private" <?php if($result['type']=='private' ) { echo "selected" ; } ?>
+                                        >Private</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="board">Board</label>
                                 <select id="board" class="form-control" name="board">
-                                    <option value="cbse"
-                                    <?php
-                                    if($result['board']=='cbse')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >CBSE</option>
-                                    <option value="icse"
-                                    <?php
-                                    if($result['board']=='icse')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >ICSE</option>
-                                    <option value="stateboard"
-                                    <?php
-                                    if($result['board']=='stateboard')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >State Board</option>
+                                    <option value="cbse" <?php if($result['board']=='cbse' ) { echo "selected" ; } ?>
+                                        >CBSE</option>
+                                    <option value="icse" <?php if($result['board']=='icse' ) { echo "selected" ; } ?>
+                                        >ICSE</option>
+                                    <option value="stateboard" <?php if($result['board']=='stateboard' ) { echo "selected" ; } ?>
+                                        >State Board</option>
                                 </select>
                             </div>
                             <div class="form-group col-md-4">
                                 <label for="gender">Gender Accepted</label>
                                 <select id="gender" class="form-control" name="gender">
-                                    <option value="co-ed"
-                                    <?php
-                                    if($result['gender']=='co-ed')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >Co-ed</option>
-                                    <option value="boys"
-                                     <?php
-                                    if($result['gender']=='boys')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >Boys</option>
-                                    <option value="girls"
-                                    <?php
-                                    if($result['gender']=='girls')
-                                    {
-                                        echo "selected";
-                                    }
-                                    ?>
-                                    >Girls</option>
+                                    <option value="co-ed" <?php if($result['gender']=='co-ed' ) { echo "selected" ; } ?>
+                                        >Co-ed</option>
+                                    <option value="boys" <?php if($result['gender']=='boys' ) { echo "selected" ; } ?>
+                                        >Boys</option>
+                                    <option value="girls" <?php if($result['gender']=='girls' ) { echo "selected" ; } ?>
+                                        >Girls</option>
                                 </select>
                             </div>
                         </div>
@@ -394,7 +362,7 @@ $id=$_GET['ns'];
                             </div>
                             <div class="form-group">
                                 <label for="acad">Brief Desciption About your Academics</label>
-                                <textarea class="form-control" rows="5" id="acad" name="acad" style="resize:none; height: 10em;" ><?php echo $result['academics'];?></textarea>
+                                <textarea class="form-control" rows="5" id="acad" name="acad" style="resize:none; height: 10em;"><?php echo $result['academics'];?></textarea>
                             </div>
                             <div class="form-group">
                                 <label for="uniq">Unique features or Achievements of your School</label>
@@ -402,22 +370,22 @@ $id=$_GET['ns'];
                             </div>
                             <div class="form-group">
                                 <label for="admission">Admission Procedure</label>
-                                <textarea class="form-control" rows="5" id="admission" name="admission" style="resize:none; height: 10em;" ><?php echo $result['admission'];?></textarea>
+                                <textarea class="form-control" rows="5" id="admission" name="admission" style="resize:none; height: 10em;"><?php echo $result['admission'];?></textarea>
                             </div>
                         </div>
                         <div class="row clearfix">
-                         <div class="form-group col-md-4">
-                            <label for="snum">No of students</label>
-                            <input type="text" class="form-control" name="snum" value="<?php echo $result['students'];?>">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="tnum">No of teachers</label>
-                            <input type="text" class="form-control" name="tnum" value="<?php echo $result['teachers'];?>">
-                        </div>
-                        <div class="form-group col-md-4">
-                            <label for="camp">Campus size in Acres</label>
-                            <input type="text" class="form-control" name="camp" value="<?php echo $result['campus'];?>">
-                        </div>
+                            <div class="form-group col-md-4">
+                                <label for="snum">No of students</label>
+                                <input type="text" class="form-control" name="snum" value="<?php echo $result['students'];?>">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="tnum">No of teachers</label>
+                                <input type="text" class="form-control" name="tnum" value="<?php echo $result['teachers'];?>">
+                            </div>
+                            <div class="form-group col-md-4">
+                                <label for="camp">Campus size in Acres</label>
+                                <input type="text" class="form-control" name="camp" value="<?php echo $result['campus'];?>">
+                            </div>
                         </div>
                         <div class="form-group">
                             <label for="keyword">Keywords to be used in meta tag</label>
@@ -427,34 +395,101 @@ $id=$_GET['ns'];
                             <label for="descrip">Description to be used in meta tag?</label>
                             <input type="text" class="form-control" name="descrip" value="<?php echo $result['description'];?>">
                         </div>
-                         <div class="form-group">
-                                <button type="submit" name="submit" class="btn btn-primary">Update</button>
-                            </div>
+                        <div class="form-group">
+                            <label for="file1">Photos</label>
+                            <input type="file" id="uploadfile" name="uploadfile[]" multiple value/>
+                        </div>
+
+                        <div class="form-group">
+                            <button type="submit" name="submit" class="btn btn-primary">Update</button>
+                        </div>
                     </form>
                     <?php
                   }
                 }
                     ?>
+                    <br />
+                    <span id="error_multiple_files"></span>
+                    <div id="image_preview"></div>
                     <!-- END PLACE PAGE CONTENT HERE -->
                 </div>
                 <!-- END CONTAINER FLUID -->
             </div>
             <?php
+                        $rr=$sch;
+                        $ddn=stripslashes($rr); 
+                        $bbn=stripslashes($ddn); 
+                        $ken=stripslashes($bbn);
+                        $tempDir ='media/'.$ken; //it means make a directory uploads where this php file is kept.
+                        if (!file_exists($tempDir)) { // if $tempDir is not there, so it will create that directory.
+                        mkdir($tempDir);
+                       }
             if(isset($_POST['submit']))
             {           
-                        $est=$_POST['est'];
-                        $type=$_POST['type'];
-                        $board=$_POST['board'];
-                        $gender=$_POST['gender'];
-                        $overview=$_POST['overview'];
-                        $acad=$_POST['acad'];
-                        $uniq= $_POST['uniq'];
-                        $ads=$_POST['admission'];
-                        $snum=$_POST['snum'];
-                        $tnum=$_POST['tnum'];
-                        $camp=$_POST['camp'];
-                        $key=$_POST['keyword'];
-                        $des=$_POST['descrip'];
+                        $est=mysqli_real_escape_string($conn,$_POST['est']);
+                        $type=mysqli_real_escape_string($conn,$_POST['type']);
+                        $board=mysqli_real_escape_string($conn,$_POST['board']);
+                        $gender=mysqli_real_escape_string($conn,$_POST['gender']);
+                        $overview=mysqli_real_escape_string($conn,$_POST['overview']);
+                        $acad=mysqli_real_escape_string($conn,$_POST['acad']);
+                        $uniq= mysqli_real_escape_string($conn,$_POST['uniq']);
+                        $ads=mysqli_real_escape_string($conn,$_POST['admission']);
+                        $snum=mysqli_real_escape_string($conn,$_POST['snum']);
+                        $tnum=mysqli_real_escape_string($conn,$_POST['tnum']);
+                        $camp=mysqli_real_escape_string($conn,$_POST['camp']);
+                        $key=mysqli_real_escape_string($conn,$_POST['keyword']);
+                        $des=mysqli_real_escape_string($conn,$_POST['descrip']);
+                        $tempDir ='media/'.$ken; //it means make a directory uploads where this php file is kept.
+                        
+                    if(!empty(array_filter($_FILES['uploadfile']['name'])))
+                    {       
+                        $files = glob("media/$ken/*.{jpg,png,jpeg}", GLOB_BRACE);  //get all file name
+                           foreach($files as $file){
+                                       if(is_file($file))
+                                           unlink($file);
+                                   }
+                       
+                       for($i=0;$i<count($_FILES["uploadfile"]["name"]);$i++)
+                       {    
+                           $filename=$_FILES["uploadfile"]["name"][$i];
+                           $tempname = $_FILES["uploadfile"]["tmp_name"][$i];
+                           $filesize = $_FILES["uploadfile"]["size"][$i];
+                           $fileerror = $_FILES["uploadfile"]["error"][$i];
+                           $filetype = $_FILES["uploadfile"]["type"][$i];
+                           $fileext = explode('.',$filename);
+                           $fileactext = strtolower(end($fileext));
+                           $allowed = array('jpg','jpeg','png');
+                           
+                           if(in_array($fileactext,$allowed))
+                           {
+                               if($fileerror ===0 ){
+                                   
+                                   if($filesize < 1000000){
+                                       $filenamenew = uniqid('',true).".".$fileactext;
+                                       $filedestn = "media/$ken/" .$filenamenew;
+                                       move_uploaded_file($tempname,$filedestn);
+                                   }
+                                   else
+                                   {
+                                       echo "Your file is too big!";
+                                   }
+                               }
+                               else
+                               {
+                                   echo "There was an error uploading your file!";
+                               }
+                           }
+                           else
+                           {
+                               echo "You cannot upload files of this type!";
+                           }
+
+                       }    
+            }
+            else
+            {
+                echo "empty";
+            }
                 
                 $query="UPDATE cms SET establish='$est', type='$type', board='$board', gender='$gender', overview='$overview',academics='$acad', uniques='$uniq', admission='$ads', students='$snum',teachers='$tnum',campus='$camp', keyword='$key', description='$des' WHERE cmsid='$id'";
                 $data=mysqli_query($conn,$query);
@@ -467,6 +502,7 @@ $id=$_GET['ns'];
                  echo mysqli_error($conn);
                 }
             }
+            
             ?>
             <!-- END PAGE CONTENT -->
             <!-- START FOOTER -->
@@ -1003,6 +1039,29 @@ $id=$_GET['ns'];
     <!-- END CORE TEMPLATE JS -->
     <!-- BEGIN PAGE LEVEL JS -->
     <script src="assets/js/scripts.js" type="text/javascript"></script>
+    <script>
+        $("#uploadfile").change(function() {
+            $('#image_preview').html("");
+            var error_images = '';
+            var total_file = document.getElementById("uploadfile").files.length;
+            if (total_file > 5) {
+                error_images += 'You can not select more than 5 files';
+
+            } else {
+                for (var i = 0; i < total_file; i++) {
+                    $('#image_preview').append("<img src='" + URL.createObjectURL(event.target.files[i]) + "'>");
+                    $('#error_multiple_files').html("<span class='text-danger' style='display:none;'>" + error_images + "</span>");
+                }
+            }
+            if (error_images != '') {
+                $('#error_multiple_files').html("<span class='text-danger'>" + error_images + "</span>");
+            }
+
+
+
+        });
+
+    </script>
     <!-- END PAGE LEVEL JS -->
 </body>
 

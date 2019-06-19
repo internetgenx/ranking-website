@@ -1,5 +1,10 @@
 <?php
 include('../connection.php');
+session_start();
+if(!$_SESSION['user_name'])
+{
+    header('location:not_log.php');
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -28,6 +33,18 @@ include('../connection.php');
 
     <link href="pages/css/pages-icons.css" rel="stylesheet" type="text/css">
     <link class="main-stylesheet" href="pages/css/pages.css" rel="stylesheet" type="text/css" />
+     <style type="text/css">
+        #image_preview {
+            border: 1px solid black;
+            padding: 10px;
+        }
+
+        #image_preview img {
+            width: 200px;
+            padding: 5px;
+        }
+
+    </style>
 </head>
 
 <body class="fixed-header">
@@ -53,40 +70,35 @@ include('../connection.php');
         <!-- START SIDEBAR MENU -->
         <div class="sidebar-menu">
             <!-- BEGIN SIDEBAR MENU ITEMS-->
-            <ul class="menu-items">
-                <li class="m-t-30">
-                    <a href="#" class="detailed">
-                        <span class="title">Page 1</span>
-                        <span class="details">234 notifications</span>
-                    </a>
-                    <span class="icon-thumbnail "><i class="pg-mail"></i></span>
-                </li>
+           <ul class="menu-items">
                 <li class="">
-                    <a href="#">
-                        <span class="title">Page 2</span>
+                    <a href="admin_form.php">
+                        <span class="title">Form</span>
                     </a>
-                    <span class="icon-thumbnail "><i class="pg-social"></i></span>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
-                <li class="">
+               <li class="">
                     <a href="javascript:;">
-                        <span class="title">Page 3</span>
+                        <span class="title">CMS</span>
                         <span class=" arrow"></span>
                     </a>
                     <span class="icon-thumbnail"><i class="pg-grid"></i></span>
                     <ul class="sub-menu">
                         <li class="">
-                            <a href="#">Sub Page 1</a>
+                            <a href="sadmin_cms.php">Add Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                         <li class="">
-                            <a href="#">Sub Page 2</a>
-                            <span class="icon-thumbnail">sp</span>
-                        </li>
-                        <li class="">
-                            <a href="#">Sub Page 3</a>
+                            <a href="cms_edit.php">Edit Content</a>
                             <span class="icon-thumbnail">sp</span>
                         </li>
                     </ul>
+                </li>
+                 <li class="">
+                    <a href="active_admin.php">
+                        <span class="title">Activate Account</span>
+                    </a>
+                    <span class="icon-thumbnail "><i class="pg-grid"></i></span>
                 </li>
             </ul>
             <div class="clearfix"></div>
@@ -251,7 +263,7 @@ include('../connection.php');
                         <a href="#" class="dropdown-item"><i class="pg-settings_small"></i> Settings</a>
                         <a href="#" class="dropdown-item"><i class="pg-outdent"></i> Feedback</a>
                         <a href="#" class="dropdown-item"><i class="pg-signals"></i> Help</a>
-                        <a href="#" class="clearfix bg-master-lighter dropdown-item">
+                        <a href="admin_logout.php" class="clearfix bg-master-lighter dropdown-item">
                             <span class="pull-left">Logout</span>
                             <span class="pull-right"><i class="pg-power"></i></span>
                         </a>
@@ -285,7 +297,7 @@ include('../connection.php');
                 <div class="container-fluid container-fixed-lg">
                     <!-- BEGIN PlACE PAGE CONTENT HERE -->
                     <h1>School Details</h1>
-                    <form action="sadmin_cms.php" method="post">
+                    <form action="sadmin_cms.php" method="post" enctype="multipart/form-data">
                         <div class="form-group">
                             <label for="nos">Name of School</label>
                             <input type="text" class="form-control" placeholder="Enter School Name" name="nos">
@@ -364,56 +376,99 @@ include('../connection.php');
                             <input type="text" class="form-control" name="descrip">
                         </div>
                          <div class="form-group">
+                            <label for="file1">Photos</label>
+                            <input type="file" id="uploadfile" name="uploadfile[]" multiple />
+                        </div>
+
+                         <div class="form-group">
                                 <button type="submit" name="submit" class="btn btn-primary">Submit</button>
                             </div>
                     </form>
+                     <br />
+                    <span id="error_multiple_files"></span>
+                    <div id="image_preview"></div>
                     <?php 
                     if(isset($_POST['submit']))
                     {
-                        $nos=$_POST['nos'];
-                        $est=$_POST['est'];
-                        $type=$_POST['type'];
-                        $board=$_POST['board'];
-                        $gender=$_POST['gender'];
-                        $overview=$_POST['overview'];
-                        $acad=$_POST['acad'];
-                        $uniq= $_POST['uniq'];
-                        $ads=$_POST['admission'];
-                        $snum=$_POST['snum'];
-                        $tnum=$_POST['tnum'];
-                        $camp=$_POST['camp'];
-                        $key=$_POST['keyword'];
-                        $des=$_POST['descrip'];
-                        
-                        $q="Select id FROM ranks WHERE schoolname='$nos'";
+                        $nos=mysqli_real_escape_string($conn,$_POST['nos']);
+                        $est=mysqli_real_escape_string($conn,$_POST['est']);
+                        $type=mysqli_real_escape_string($conn,$_POST['type']);
+                        $board=mysqli_real_escape_string($conn,$_POST['board']);
+                        $gender=mysqli_real_escape_string($conn,$_POST['gender']);
+                        $overview=mysqli_real_escape_string($conn,$_POST['overview']);
+                        $acad=mysqli_real_escape_string($conn,$_POST['acad']);
+                        $uniq= mysqli_real_escape_string($conn,$_POST['uniq']);
+                        $ads=mysqli_real_escape_string($conn,$_POST['admission']);
+                        $snum=mysqli_real_escape_string($conn,$_POST['snum']);
+                        $tnum=mysqli_real_escape_string($conn,$_POST['tnum']);
+                        $camp=mysqli_real_escape_string($conn,$_POST['camp']);
+                        $key=mysqli_real_escape_string($conn,$_POST['keyword']);
+                        $des=mysqli_real_escape_string($conn,$_POST['descrip']);
+                        $ken=stripcslashes($nos);
+                        $tempDir ='media/'.$ken; //it means make a directory uploads where this php file is kept.
+                        if (!file_exists($tempDir)) { // if $tempDir is not there, so it will create that directory.
+                        mkdir($tempDir);
+                       }
+                          for($i=0;$i<count($_FILES["uploadfile"]["name"]);$i++)
+                          {
+                           $filename=$_FILES["uploadfile"]["name"][$i];
+                           $tempname = $_FILES["uploadfile"]["tmp_name"][$i];
+                           $filesize = $_FILES["uploadfile"]["size"][$i];
+                           $fileerror = $_FILES["uploadfile"]["error"][$i];
+                           $filetype = $_FILES["uploadfile"]["type"][$i];
+                           $fileext = explode('.',$filename);
+                           $fileactext = strtolower(end($fileext));
+                           $allowed = array('jpg','jpeg','png');
+                           
+                           if(in_array($fileactext,$allowed))
+                           {
+                               if($fileerror ===0 ){
+                                   if($filesize < 1000000){
+                                       $filenamenew = uniqid('',true).".".$fileactext;
+                                       $filedestn = "media/$ken/" .$filenamenew;
+                                       move_uploaded_file($tempname,$filedestn);
+                                   }
+                                   else
+                                   {
+                                       echo "Your file is too big!";
+                                   }
+                               }
+                               else
+                               {
+                                   echo "There was an error uploading your file!";
+                               }
+                           }
+                           else
+                           {
+                               echo "You cannot upload files of this type!";
+                           }
+                       }
+                        $q="SELECT id FROM ranks WHERE schoolname='$nos' ";
                         $d=mysqli_query($conn,$q);
                         $result=mysqli_fetch_assoc($d);
                         $ik=$result['id'];
                         
-                        $s="Select pid FROM points WHERE points_fk='$ik' ";
+                        $s="SELECT pid FROM points WHERE points_fk='$ik' ";
                         $u=mysqli_query($conn,$s);
                         $resu=mysqli_fetch_assoc($u);
                         
                         $ikey=$resu['pid'];
                         
-                        $query="INSERT INTO cms(schoolname,establish,type,board,gender,overview,academics,uniques,admission,students,teachers,campus,keyword,description,cms_fk) VALUES('$nos','$est','$type','$board','$gender','$overview','$acad','$uniq','$ads','$snum','$tnum','$camp','$key','$des','$ikey')";
+                        
+                        $query="INSERT INTO cms(schoolname,establish,type,board,gender,overview,academics,uniques,admission,students,teachers,campus,keyword,description,cms_fk) VALUES('$nos','$est','$type','$board','$gender','$overview','$acad','$uniq','$ads','$snum','$tnum','$camp','$key','$des','$ikey');";
                         
                         $data=mysqli_query($conn,$query);
                         
+                        if($data)
+                        {
+                         echo "inserted";
+                        }
+                        else
+                        {
+                          echo mysqli_error($conn);
+                          echo $query;
+                        }
                         
-                        /*$q="Select id FROM ranks WHERE schoolname='$nos'";
-                        $d=mysqli_query($conn,$q);
-                        $result=mysqli_fetch_assoc($d);
-                        $ik=$result['id'];
-                        
-                        $s="Select pid FROM points WHERE points_fk='$ik' ";
-                        $u=mysqli_query($conn,$s);
-                        $resu=mysqli_fetch_assoc($u);
-                        
-                        $ikey=$resu['pid'];
-                        
-                        $t="UPDATE cms SET cms_fk='$ikey' WHERE schoolname='$nos'";
-                        mysqli_query($conn,$t);*/
                     }
                     ?>
                     <!-- END PLACE PAGE CONTENT HERE -->
@@ -956,6 +1011,29 @@ include('../connection.php');
     <!-- BEGIN PAGE LEVEL JS -->
     <script src="assets/js/scripts.js" type="text/javascript"></script>
     <!-- END PAGE LEVEL JS -->
+    <script>
+        $("#uploadfile").change(function() {
+            $('#image_preview').html("");
+            var error_images = '';
+            var total_file = document.getElementById("uploadfile").files.length;
+            if (total_file > 5) {
+                error_images += 'You can not select more than 5 files';
+
+            } else {
+                for (var i = 0; i < total_file; i++) {
+                    $('#image_preview').append("<img src='" + URL.createObjectURL(event.target.files[i]) + "'>");
+                    $('#error_multiple_files').html("<span class='text-danger' style='display:none;'>" + error_images + "</span>");
+                }
+            }
+            if (error_images != '') {
+                $('#error_multiple_files').html("<span class='text-danger'>" + error_images + "</span>");
+            }
+
+
+
+        });
+
+    </script>
 </body>
 
 </html>
