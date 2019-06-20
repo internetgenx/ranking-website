@@ -242,7 +242,7 @@ else
                 data: {
                     labels: Labels,
                     datasets: [{
-                        label: 'no. of visits',
+                        label: 'points',
                         data: Data,
                         backgroundColor:'#0318CF',
                         borderWidth: 1
